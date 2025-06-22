@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Mini Google Drive</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png">
 </head>
 <body>
@@ -108,6 +108,7 @@ async function fetchStorage() {
 function toGB(bytes) {
   return (bytes / 1024 / 1024 / 1024).toLocaleString('vi-VN', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
+
 function formatSize(bytes) {
   if (!bytes) return '';
   if (bytes < 1024) return bytes + ' B';
@@ -322,7 +323,8 @@ function uploadFileList(fileList, folderId) {
   if (!fileList || !fileList.length) return;
   uploadFiles(Array.from(fileList), folderId);
 }
-async function uploadFiles(files, folderId, basePath='') {
+
+async function uploadFiles(files, folderId, basePath = '') {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const formData = new FormData();
@@ -338,6 +340,7 @@ async function uploadFiles(files, folderId, basePath='') {
     await fetchFiles(currentFolderId);
   }
 }
+
 function uploadFolder(fileList, folderId) {
   uploadFiles(Array.from(fileList), folderId);
 }
