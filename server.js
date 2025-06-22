@@ -14,7 +14,7 @@ const PORT = 3001;
 // ==== Google Drive API config ====
 const CLIENT_ID = 'YOUR_CLIENT_ID';
 const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REDIRECT_URI = 'YOUR_REDIRECT_URI';
 const REFRESH_TOKEN = 'YOUR_REFRESH_TOKEN';
 
 const oauth2Client = new google.auth.OAuth2(
