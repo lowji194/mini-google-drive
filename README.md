@@ -63,7 +63,7 @@ const REFRESH_TOKEN = 'xxx';
 **Bước 3: Lấy Refresh Token**  
 - Vào [OAuth 2.0 Playground](https://developers.google.com/oauthplayground/)
 - Nhấn biểu tượng bánh răng (cài đặt) → chọn **Use your own OAuth credentials**
-- Nhập **Client ID** và **Client Secret** ở bước 1
+- Nhập **Client ID** và **Client Secret**
 - Ở Step 1, tìm **Drive API v3** > tick:
   ```
   https://www.googleapis.com/auth/drive
