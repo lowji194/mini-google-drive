@@ -46,7 +46,7 @@ const REFRESH_TOKEN = 'xxx';
 **Bước 1: Tạo OAuth Client ID trên Google Cloud**  
 - Truy cập [Google Cloud Console](https://console.cloud.google.com/)
 - Tạo project mới (hoặc chọn project bạn muốn dùng)
-- Vào **APIs & Services > Credentials (|| Customers)**
+- Vào **APIs & Services > Credentials hoặc Identifiers**
 - Nhấn **Create Credentials > OAuth client ID**
 - Application type: chọn **Web application**
 - Authorized redirect URIs: thêm dòng:
@@ -71,6 +71,10 @@ const REFRESH_TOKEN = 'xxx';
 - Nhấn **Authorize APIs**, đăng nhập Google, cấp quyền, quay lại playground
 - Nhấn **Exchange authorization code for tokens**
 - Copy **Refresh token** và điền vào `server.js`
+
+**Note: Nếu xảy ra lỗi 403: access_denied thì phải publish app**
+- Vào [Audience](https://console.cloud.google.com/auth/audience)
+- Nhấn *Publish app** sau đó quay lại [OAuth 2.0 Playground](https://developers.google.com/oauthplayground/) làm lại như bước 3
 
 ---
 
