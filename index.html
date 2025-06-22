@@ -405,6 +405,8 @@ async function uploadFiles(files, folderId, basePath = '') {
     const file = files[i];
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('encodedName', encodeURIComponent(file.name)); // add for fileName
+    
     if (file.webkitRelativePath) {
       formData.append('relativePath', file.webkitRelativePath);
     } else if (basePath) {

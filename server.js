@@ -232,8 +232,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     if (folderPath) {
       parentId = await getOrCreateFolderByPath(folderPath, parentId);
     }
+
     // Kiểm tra file cùng tên trong parent (ghi đè)
-    const fileName = req.file.originalname;
+    // const fileName = req.file.originalname;
+    const fileName = req.body.encodedName ? decodeURIComponent(req.body.encodedName) : req.file.originalname;
     const existed = await drive.files.list({
       q: `'${parentId}' in parents and name='${fileName.replace(/'/g, "\\'")}' and trashed=false`,
       fields: 'files(id)',
