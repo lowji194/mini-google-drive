@@ -1,17 +1,21 @@
-const express = require('express');
-const multer  = require('multer');
-const fs = require('fs');
-const { google } = require('googleapis');
-const path = require('path');
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+import express from 'express';
+import multer from 'multer';
+import { google } from 'googleapis';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = 3001;
 
 // ==== Google Drive API config ====
-const CLIENT_ID = '';
-const CLIENT_SECRET = '';
-const REDIRECT_URI = '';
-const REFRESH_TOKEN = '';
+const CLIENT_ID = 'YOUR_CLIENT_ID';
+const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = 'YOUR_REFRESH_TOKEN';
 
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID, CLIENT_SECRET, REDIRECT_URI
@@ -185,6 +189,8 @@ app.post('/create-folder', async (req, res) => {
     const parentId = req.body.parentId || rootId;
     const name = req.body.name;
     if (!name) return res.status(400).json({ error: 'Thiếu tên thư mục' });
+    if (name.length > 255) return res.status(400).json({ error: 'Tên thư mục quá dài' });
+    if (/[<>:"/\\|?*]/.test(name)) return res.status(400).json({ error: 'Tên thư mục chứa ký tự không hợp lệ' });
     // Nếu đã có folder cùng tên trong parent -> trả về luôn
     const existed = await drive.files.list({
       q: `'${parentId}' in parents and mimeType='application/vnd.google-apps.folder' and name='${name.replace(/'/g, "\\'")}' and trashed=false`,
@@ -298,7 +304,13 @@ app.delete('/delete/:id', async (req, res) => {
   }
 });
 
-// ==== Serve static ====
+// ==== Middleware xử lý lỗi tổng quát ====
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ error: 'Lỗi server', detail: err.message });
+});
+
+// ==== Server static ====
 app.use(express.static(__dirname));
 
 // ==== Listen all IP ====
