@@ -8,6 +8,19 @@
   <link rel="icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png">
 </head>
 <body>
+  <!-- Theme Switcher -->
+  <div class="theme-switcher">
+    <button class="theme-btn" data-theme="light" title="Theme sáng">
+      <span class="mdi mdi-white-balance-sunny"></span>
+    </button>
+    <button class="theme-btn" data-theme="dark" title="Theme tối">
+      <span class="mdi mdi-weather-night"></span>
+    </button>
+    <button class="theme-btn" data-theme="auto" title="Tự động theo máy">
+      <span class="mdi mdi-monitor"></span>
+    </button>
+  </div>
+
   <div class="drive-header">
     <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png" alt="Drive" style="width:32px;height:32px;margin-right:13px;">
     <span class="header-title">Mini Google Drive</span>
@@ -48,6 +61,69 @@
   </div>
   <div id="toast-container"></div>
 <script>
+// ==== THEME MANAGEMENT ====
+let currentTheme = localStorage.getItem('theme') || 'auto';
+
+// Khởi tạo theme
+function initTheme() {
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  
+  // Xóa active class từ tất cả buttons
+  themeBtns.forEach(btn => btn.classList.remove('active'));
+  
+  // Thêm active class cho button hiện tại
+  const activeBtn = document.querySelector(`[data-theme="${currentTheme}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+  
+  // Áp dụng theme
+  applyTheme(currentTheme);
+}
+
+// Áp dụng theme
+function applyTheme(theme) {
+  const root = document.documentElement;
+  
+  if (theme === 'auto') {
+    // Tự động theo system preference
+    root.removeAttribute('data-theme');
+  } else {
+    // Áp dụng theme cụ thể
+    root.setAttribute('data-theme', theme);
+  }
+  
+  // Lưu vào localStorage
+  localStorage.setItem('theme', theme);
+  currentTheme = theme;
+}
+
+// Chuyển đổi theme
+function switchTheme(theme) {
+  applyTheme(theme);
+  initTheme();
+}
+
+// Event listeners cho theme buttons
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  
+  // Thêm event listeners cho theme buttons
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  themeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const theme = this.getAttribute('data-theme');
+      switchTheme(theme);
+    });
+  });
+  
+  // Theo dõi thay đổi system preference
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  mediaQuery.addEventListener('change', function(e) {
+    if (currentTheme === 'auto') {
+      applyTheme('auto');
+    }
+  });
+});
+
 // ==== Quota cá nhân tự định nghĩa ====
 const MY_QUOTA_GB = 0;
 
@@ -551,6 +627,9 @@ window.onload = function() {
   fetchStorage();
 };
 </script>
+
+<!-- Theme Switcher -->
+<script src="assets/js/theme.js" defer></script>
 
 </body>
 </html>
