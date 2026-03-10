@@ -1,17 +1,16 @@
-
 **Mini Google Drive** là một dự án giúp bạn upload, quản lý và chia sẻ file qua Google Drive với giao diện web thân thiện.
 
 ---
 
 ## 💾 Yêu cầu hệ thống
 
-- Node.js >= 16.x
-- npm hoặc yarn
+- Node.js >= 18.x
+- npm hoặc bun, yarn
 - Tài khoản Google (để tạo OAuth2 Client)
 - Đã bật Google Drive API (xem hướng dẫn bên dưới)
 
 ---
-![Ảnh minh họa](Screenshot.png)
+![Ảnh minh họa](assets/image/Screenshot.png)
 ---
 
 ## 🚀 Hướng dẫn cài đặt
@@ -26,7 +25,7 @@ cd mini-google-drive
 ### 2. Cài đặt thư viện phụ thuộc
 
 ```bash
-npm install express busboy googleapis
+npm install express googleapis multer
 ```
 
 ---
@@ -47,7 +46,7 @@ const REFRESH_TOKEN = 'xxx';
 **Bước 1: Tạo OAuth Client ID trên Google Cloud**  
 - Truy cập [Google Cloud Console](https://console.cloud.google.com/)
 - Tạo project mới (hoặc chọn project bạn muốn dùng)
-- Vào **APIs & Services > Credentials**
+- Vào **APIs & Services > Credentials hoặc Identifiers**
 - Nhấn **Create Credentials > OAuth client ID**
 - Application type: chọn **Web application**
 - Authorized redirect URIs: thêm dòng:
@@ -55,6 +54,7 @@ const REFRESH_TOKEN = 'xxx';
   https://developers.google.com/oauthplayground
   ```
 - Nhấn **Create** và copy **Client ID** và **Client Secret**
+ - Hoặc **Customer ID** và **Customer secret code**
 
 **Bước 2: Bật Google Drive API**  
 - Vào **APIs & Services > Library**
@@ -71,6 +71,10 @@ const REFRESH_TOKEN = 'xxx';
 - Nhấn **Authorize APIs**, đăng nhập Google, cấp quyền, quay lại playground
 - Nhấn **Exchange authorization code for tokens**
 - Copy **Refresh token** và điền vào `server.js`
+
+**Note: Nếu xảy ra lỗi 403: access_denied thì phải publish app**
+- Vào [Audience](https://console.cloud.google.com/auth/audience)
+- Nhấn *Publish app** sau đó quay lại [OAuth 2.0 Playground](https://developers.google.com/oauthplayground/) làm lại như bước 3
 
 ---
 

@@ -1,0 +1,35 @@
+{
+  "name": "mini-google-drive",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Một dự án giúp bạn upload, quản lý và chia sẻ file qua Google Drive với giao diện web thân thiện",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "google-drive",
+    "mini-google-drive",
+    "google-drive-api",
+    "file-upload",
+    "file-management"
+  ],
+  "author": "lowji194",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0",
+    "googleapis": "^150.0.1",
+    "multer": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowji194/mini-google-drive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lowji194/mini-google-drive/issues"
+  },
+  "homepage": "https://github.com/lowji194/mini-google-drive#readme"
+}

@@ -4,10 +4,23 @@
   <meta charset="UTF-8">
   <title>Mini Google Drive</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png">
 </head>
 <body>
+  <!-- Theme Switcher -->
+  <div class="theme-switcher">
+    <button class="theme-btn" data-theme="light" title="Theme sáng">
+      <span class="mdi mdi-white-balance-sunny"></span>
+    </button>
+    <button class="theme-btn" data-theme="dark" title="Theme tối">
+      <span class="mdi mdi-weather-night"></span>
+    </button>
+    <button class="theme-btn" data-theme="auto" title="Tự động theo máy">
+      <span class="mdi mdi-monitor"></span>
+    </button>
+  </div>
+
   <div class="drive-header">
     <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png" alt="Drive" style="width:32px;height:32px;margin-right:13px;">
     <span class="header-title">Mini Google Drive</span>
@@ -48,6 +61,69 @@
   </div>
   <div id="toast-container"></div>
 <script>
+// ==== THEME MANAGEMENT ====
+let currentTheme = localStorage.getItem('theme') || 'auto';
+
+// Khởi tạo theme
+function initTheme() {
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  
+  // Xóa active class từ tất cả buttons
+  themeBtns.forEach(btn => btn.classList.remove('active'));
+  
+  // Thêm active class cho button hiện tại
+  const activeBtn = document.querySelector(`[data-theme="${currentTheme}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+  
+  // Áp dụng theme
+  applyTheme(currentTheme);
+}
+
+// Áp dụng theme
+function applyTheme(theme) {
+  const root = document.documentElement;
+  
+  if (theme === 'auto') {
+    // Tự động theo system preference
+    root.removeAttribute('data-theme');
+  } else {
+    // Áp dụng theme cụ thể
+    root.setAttribute('data-theme', theme);
+  }
+  
+  // Lưu vào localStorage
+  localStorage.setItem('theme', theme);
+  currentTheme = theme;
+}
+
+// Chuyển đổi theme
+function switchTheme(theme) {
+  applyTheme(theme);
+  initTheme();
+}
+
+// Event listeners cho theme buttons
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  
+  // Thêm event listeners cho theme buttons
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  themeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const theme = this.getAttribute('data-theme');
+      switchTheme(theme);
+    });
+  });
+  
+  // Theo dõi thay đổi system preference
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  mediaQuery.addEventListener('change', function(e) {
+    if (currentTheme === 'auto') {
+      applyTheme('auto');
+    }
+  });
+});
+
 // ==== Quota cá nhân tự định nghĩa ====
 const MY_QUOTA_GB = 0;
 
@@ -108,6 +184,7 @@ async function fetchStorage() {
 function toGB(bytes) {
   return (bytes / 1024 / 1024 / 1024).toLocaleString('vi-VN', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
+
 function formatSize(bytes) {
   if (!bytes) return '';
   if (bytes < 1024) return bytes + ' B';
@@ -138,30 +215,71 @@ function openFolderByBreadcrumb(idx) {
 
 // ==== Tạo icon file ====
 function getFileTypeIcon(file) {
-  if (file.isFolder) return '<span class="mdi mdi-folder file-icon" style="color:#ffb300"></span>';
+  if (file.isFolder)
+    return '<span class="mdi mdi-folder file-icon" style="color:#ffb300"></span>';
+
   const ext = (file.name || '').split('.').pop().toLowerCase();
+
   switch (ext) {
-    case 'xml':   return '<span class="mdi mdi-xml file-icon" style="color:#7d63e0"></span>';
-    case 'py':    return '<span class="mdi mdi-language-python file-icon" style="color:#306998"></span>';
-    case 'php':   return '<span class="mdi mdi-language-php file-icon" style="color:#6e4fbb"></span>';
-    case 'json':  return '<span class="mdi mdi-code-json file-icon" style="color:#01a98e"></span>';
-    case 'exe':   return '<span class="mdi mdi-cog file-icon" style="color:#455a64"></span>';
-    case 'apk':   return '<span class="mdi mdi-android file-icon" style="color:#43b755"></span>';
-    case 'cs':    return '<span class="mdi mdi-language-csharp file-icon" style="color:#512bd4"></span>';
-    case 'js':    return '<span class="mdi mdi-language-javascript file-icon" style="color:#efd81d"></span>';
-    case 'html':  return '<span class="mdi mdi-language-html5 file-icon" style="color:#e34c26"></span>';
-    case 'css':   return '<span class="mdi mdi-language-css3 file-icon" style="color:#2965f1"></span>';
-    case 'zip': case 'rar': return '<span class="mdi mdi-folder-zip file-icon" style="color:#607d8b"></span>';
-    case 'txt':   return '<span class="mdi mdi-file-document-outline file-icon" style="color:#222"></span>';
-    case 'pdf':   return '<span class="mdi mdi-file-pdf-box file-icon" style="color:#ea4335"></span>';
+    // ==== Programming Language ====
+    case 'py': return '<span class="mdi mdi-language-python file-icon" style="color:#306998"></span>';
+    case 'js': return '<span class="mdi mdi-language-javascript file-icon" style="color:#efd81d"></span>';
+    case 'ts': return '<span class="mdi mdi-language-typescript file-icon" style="color:#007acc"></span>';
+    case 'java': return '<span class="mdi mdi-language-java file-icon" style="color:#b07219"></span>';
+    case 'cs': return '<span class="mdi mdi-language-csharp file-icon" style="color:#512bd4"></span>';
+    case 'c': return '<span class="mdi mdi-language-c file-icon" style="color:#00599c"></span>';
+    case 'cpp': case 'cc': case 'cxx': case 'hpp': case 'h': return '<span class="mdi mdi-language-cpp file-icon" style="color:#00599c"></span>';
+    case 'php': return '<span class="mdi mdi-language-php file-icon" style="color:#6e4fbb"></span>';
+    case 'go': return '<span class="mdi mdi-language-go file-icon" style="color:#00acd7"></span>';
+    case 'rb': return '<span class="mdi mdi-language-ruby file-icon" style="color:#cc342d"></span>';
+    case 'rs': return '<span class="mdi mdi-language-rust file-icon" style="color:#dea584"></span>';
+    case 'kt': case 'kts': return '<span class="mdi mdi-language-kotlin file-icon" style="color:#7f52ff"></span>';
+    case 'swift': return '<span class="mdi mdi-language-swift file-icon" style="color:#f05138"></span>';
+    case 'lua': return '<span class="mdi mdi-language-lua file-icon" style="color:#000080"></span>';
+    case 'dart': return '<span class="mdi mdi-language-dart file-icon" style="color:#00b4ab"></span>';
+    case 'r': return '<span class="mdi mdi-language-r file-icon" style="color:#276dc3"></span>';
+    case 'scala': return '<span class="mdi mdi-language-scala file-icon" style="color:#dc322f"></span>';
+    case 'sql': return '<span class="mdi mdi-database file-icon" style="color:#4479a1"></span>';
+    case 'sh': case 'bash': return '<span class="mdi mdi-console file-icon" style="color:#4caf50"></span>';
+    case 'xml': return '<span class="mdi mdi-xml file-icon" style="color:#7d63e0"></span>';
+    case 'json': return '<span class="mdi mdi-code-json file-icon" style="color:#01a98e"></span>';
+    case 'html': return '<span class="mdi mdi-language-html5 file-icon" style="color:#e34c26"></span>';
+    case 'css': return '<span class="mdi mdi-language-css3 file-icon" style="color:#2965f1"></span>';
+    case 'md': return '<span class="mdi mdi-language-markdown file-icon" style="color:#083fa1"></span>';
+    case 'yaml': case 'yml': return '<span class="mdi mdi-code-braces file-icon" style="color:#cb171e"></span>';
+
+    // ==== Executable & Setup ====
+    case 'exe': return '<span class="mdi mdi-cog file-icon" style="color:#455a64"></span>';
+    case 'apk': return '<span class="mdi mdi-android file-icon" style="color:#43b755"></span>';
+    case 'bat': case 'cmd': return '<span class="mdi mdi-console file-icon" style="color:#607d8b"></span>';
+
+    // ==== Office & Document ====
     case 'doc': case 'docx': return '<span class="mdi mdi-file-word-box file-icon" style="color:#4285f4"></span>';
     case 'xls': case 'xlsx': return '<span class="mdi mdi-file-excel-box file-icon" style="color:#34a853"></span>';
-    case 'png': case 'jpg': case 'jpeg': case 'gif': case 'bmp': return '<span class="mdi mdi-file-image file-icon" style="color:#fbc02d"></span>';
-    case 'mp3': case 'wav': return '<span class="mdi mdi-file-music file-icon" style="color:#9c27b0"></span>';
-    case 'mp4': case 'mov': return '<span class="mdi mdi-file-video file-icon" style="color:#00acc1"></span>';
-    default: return '<span class="mdi mdi-file-outline file-icon" style="color:#636c72"></span>';
+    case 'ppt': case 'pptx': return '<span class="mdi mdi-file-powerpoint-box file-icon" style="color:#f57c00"></span>';
+    case 'pdf': return '<span class="mdi mdi-file-pdf-box file-icon" style="color:#ea4335"></span>';
+    case 'txt': return '<span class="mdi mdi-file-document-outline file-icon" style="color:#222"></span>';
+    case 'rtf': return '<span class="mdi mdi-file-document file-icon" style="color:#607d8b"></span>';
+
+    // ==== Archive & Backup ====
+    case 'zip': case 'rar': case '7z': case 'tar': case 'gz': return '<span class="mdi mdi-folder-zip file-icon" style="color:#607d8b"></span>';
+    case 'iso': return '<span class="mdi mdi-disc file-icon" style="color:#9e9e9e"></span>';
+
+    // ==== Image & Photoshop ====
+    case 'png': case 'jpg': case 'jpeg': case 'gif': case 'bmp': case 'webp': case 'svg': return '<span class="mdi mdi-file-image file-icon" style="color:#fbc02d"></span>';
+    case 'psd': return '<span class="mdi mdi-adobe file-icon" style="color:#001e36"></span>';
+    case 'ai': return '<span class="mdi mdi-vector-square file-icon" style="color:#ff7c00"></span>';
+
+    // ==== Audio & Music ====
+    case 'mp3': case 'wav': case 'flac': case 'ogg': case 'm4a': return '<span class="mdi mdi-file-music file-icon" style="color:#9c27b0"></span>';
+
+    // ==== Video & film ====
+    case 'mp4': case 'mov': case 'mkv': case 'avi': case 'wmv': case 'flv': return '<span class="mdi mdi-file-video file-icon" style="color:#00acc1"></span>';
+    default:
+      return '<span class="mdi mdi-file-outline file-icon" style="color:#636c72"></span>';
   }
 }
+
 
 // ==== Render file/folder row ====
 function renderFileRow(f) {
@@ -281,11 +399,14 @@ function uploadFileList(fileList, folderId) {
   if (!fileList || !fileList.length) return;
   uploadFiles(Array.from(fileList), folderId);
 }
-async function uploadFiles(files, folderId, basePath='') {
+
+async function uploadFiles(files, folderId, basePath = '') {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('encodedName', encodeURIComponent(file.name)); // add for fileName
+    
     if (file.webkitRelativePath) {
       formData.append('relativePath', file.webkitRelativePath);
     } else if (basePath) {
@@ -297,6 +418,7 @@ async function uploadFiles(files, folderId, basePath='') {
     await fetchFiles(currentFolderId);
   }
 }
+
 function uploadFolder(fileList, folderId) {
   uploadFiles(Array.from(fileList), folderId);
 }
@@ -456,7 +578,7 @@ function showConfirm(msg, onOk, onCancel) {
   modal.innerHTML = `
     <div class="modal">
       <div class="modal-title"><span class="mdi mdi-alert-outline"></span> Xác nhận</div>
-      <div style="margin: 16px 0 13px 0; font-size:16.2px; color:#212529;">${msg}</div>
+      <div class="modal-body">${msg}</div>
       <div class="modal-actions">
         <button class="btn btn-primary" id="btnOk">Đồng ý</button>
         <button class="btn btn-cancel" id="btnCancel">Hủy</button>
@@ -507,6 +629,9 @@ window.onload = function() {
   fetchStorage();
 };
 </script>
+
+<!-- Theme Switcher -->
+<script src="assets/js/theme.js" defer></script>
 
 </body>
 </html>
