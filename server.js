@@ -5,13 +5,13 @@ const { google } = require('googleapis');
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // ==== Google Drive API config ====
-const CLIENT_ID = '';
-const CLIENT_SECRET = '';
-const REDIRECT_URI = '';
-const REFRESH_TOKEN = '';
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+const REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN || '';
 
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID, CLIENT_SECRET, REDIRECT_URI

@@ -1,3 +1,6 @@
+[![🇺🇸 English](https://img.shields.io/badge/Language-English-1e293b?style=flat-square)](README-EN.md)
+
+# Mini Google Drive
 
 **Mini Google Drive** là một dự án giúp bạn upload, quản lý và chia sẻ file qua Google Drive với giao diện web thân thiện.
 
@@ -26,20 +29,22 @@ cd mini-google-drive
 ### 2. Cài đặt thư viện phụ thuộc
 
 ```bash
-npm install express busboy googleapis
+npm install
 ```
+
+*(Hoặc cài trực tiếp: `npm install express multer googleapis`)*
 
 ---
 
-### 3. Lấy CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN
+### 3. Cấu hình `CLIENT_ID`, `CLIENT_SECRET`, `REFRESH_TOKEN`
 
-Bạn cần điền trực tiếp các giá trị này vào đầu file `server.js`:
+Bạn có thể truyền qua biến môi trường theo mẫu `.env.example` (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `GOOGLE_REFRESH_TOKEN`) hoặc điền trực tiếp vào đầu file `server.js`:
 
 ```js
-const CLIENT_ID = 'xxx.apps.googleusercontent.com';
-const CLIENT_SECRET = 'xxx';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = 'xxx';
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'xxx.apps.googleusercontent.com';
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'xxx';
+const REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN || 'xxx';
 ```
 
 #### Cách lấy thông tin này:
@@ -70,14 +75,14 @@ const REFRESH_TOKEN = 'xxx';
   ```
 - Nhấn **Authorize APIs**, đăng nhập Google, cấp quyền, quay lại playground
 - Nhấn **Exchange authorization code for tokens**
-- Copy **Refresh token** và điền vào `server.js`
+- Copy **Refresh token** và cấu hình vào biến môi trường hoặc `server.js`
 
 ---
 
 ### 4. Chạy dự án
 
 ```bash
-node server.js
+npm start
 ```
 Truy cập vào: [http://localhost:3001](http://localhost:3001)
 
@@ -88,18 +93,21 @@ Truy cập vào: [http://localhost:3001](http://localhost:3001)
 ```
 mini-google-drive/
 │
-├── server.js         # Code Node.js backend (chứa thông tin OAuth)
+├── server.js         # Backend Node.js / Express làm việc với Google Drive API v3
 ├── index.html        # Giao diện web
 ├── styles.css        # CSS giao diện
-├── README.md         # File hướng dẫn này
+├── package.json      # Khai báo dependencies và script khởi chạy
+├── .env.example      # Mẫu biến môi trường OAuth2
+├── LICENSE           # Giấy phép MIT
+└── README.md         # Tài liệu hướng dẫn
 ```
 
 ---
 
 ## 📢 Lưu ý bảo mật
 
-- **Không chia sẻ mã nguồn chứa CLIENT_SECRET, REFRESH_TOKEN công khai!**
-- Nếu bị lộ, phải đổi lại trên Google Cloud.
+- **Không chia sẻ hoặc commit mã nguồn chứa `CLIENT_SECRET`, `REFRESH_TOKEN` lên repository công khai.**
+- Nếu bị lộ, hãy thu hồi và tạo lại credential trên Google Cloud Console.
 
 ---
 
@@ -109,10 +117,10 @@ mini-google-drive/
 
 ---
 
-## 📫 Liên hệ với tôi
+## 📫 Liên hệ
 
-- 📞 **SĐT:** 0963 159 294
-- 🌐 **Website:** [lowji194.github.io](https://lowji194.github.io)
+- 🌐 **Website:** [theloi.io.vn](https://theloi.io.vn)
+- 💬 **Telegram:** [@theloi194](https://t.me/theloi194)
 - 📌 **Facebook:** [Lowji194](https://facebook.com/Lowji194)
 
 ---

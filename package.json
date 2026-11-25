@@ -1,0 +1,25 @@
+{
+  "name": "mini-google-drive",
+  "version": "1.0.0",
+  "description": "Lightweight Node.js and Express web portal for uploading, organizing, and sharing files via Google Drive API v3.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "google-drive",
+    "express",
+    "file-upload",
+    "nodejs"
+  ],
+  "author": "Nguyễn Thế Lợi <theloi194@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
